@@ -27,18 +27,7 @@ public class Console extends JFrame {
         setVisible(true);
     }
 
-    public ConsoleComponent getConsole() {
-        return console;
-    }
-
-    public static void appendText(String text) {
-        console.getFilter().setFilter(false);
-        console.getText().append(text + "\n");
-        console.getFilter().setFilter(true);
-        console.getText().setCaretPosition(console.getText().getDocument().getEndPosition().getOffset() - 1);
-    }
-
-    public static void setCaret() {
+    static void setCaret() {
         console.getText().setCaretPosition(console.getText().getDocument().getEndPosition().getOffset() - 1);
     }
 }

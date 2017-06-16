@@ -15,7 +15,6 @@ import java.awt.event.KeyListener;
 class ConsoleComponent extends JPanel {
 
     private volatile JTextArea textArea;
-    private Filter filter;
 
     ConsoleComponent() {
         setLayout(new BorderLayout());
@@ -55,7 +54,7 @@ class ConsoleComponent extends JPanel {
             }
         });
 
-        filter = new Filter();
+        Filter filter = new Filter();
         ((AbstractDocument) textArea.getDocument()).setDocumentFilter(filter);
 
         add(second, BorderLayout.CENTER);
@@ -96,10 +95,6 @@ class ConsoleComponent extends JPanel {
 
     JTextArea getText() {
         return textArea;
-    }
-
-    Filter getFilter() {
-        return filter;
     }
 
 }

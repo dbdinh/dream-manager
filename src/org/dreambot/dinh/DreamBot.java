@@ -22,7 +22,6 @@ public class DreamBot extends Console {
 
     public static void main(String[] args) {
         new DreamBot("Console");
-        Cookie.cookieList = new HashMap<>();
     }
 
     private DreamBot(String title) {
@@ -32,17 +31,14 @@ public class DreamBot extends Console {
     public static boolean login(String username, String password) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://dreambot.org/forums/index.php?app=core&module=global&section=login&do=process").openConnection();
-
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
             out.write(WebsiteContext.getPostData("auth_key=880ea6a14ea49e853634fbdc5015a024", "ips_username=" + username, "ips_password=" + password, "rememberMe=1"));
             out.flush();
 
+            Cookie.cookieList = new HashMap<>();
             Cookie.handleCookies(connection);
-
-            Cookie.cookieList.put("ipsconnect_cc432022c24962b853c4f27f41453ebc", "1");
-            Cookie.cookieList.put("dream_coppa", "0");
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             String line;
@@ -54,10 +50,7 @@ public class DreamBot extends Console {
                 }
             }
             bufferedReader.close();
-        } catch (
-                IOException e)
-
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
