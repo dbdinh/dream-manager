@@ -20,6 +20,8 @@ import java.util.HashMap;
 
 public class DreamBot extends Console {
 
+    public static String authKey;
+
     public static void main(String[] args) {
         new DreamBot("Console");
     }
@@ -29,12 +31,14 @@ public class DreamBot extends Console {
     }
 
     public static boolean login(String username, String password) {
+        authKey = getAuthKey();
+        if (authKey == null) return false;
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://dreambot.org/forums/index.php?app=core&module=global&section=login&do=process").openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-            out.write(WebsiteContext.getPostData("auth_key=880ea6a14ea49e853634fbdc5015a024", "ips_username=" + username, "ips_password=" + password, "rememberMe=1"));
+            out.write(WebsiteContext.getPostData("auth_key=" + authKey, "ips_username=" + username, "ips_password=" + password, "rememberMe=1"));
             out.flush();
 
             Cookie.cookieList = new HashMap<>();
@@ -54,6 +58,26 @@ public class DreamBot extends Console {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private static String getAuthKey() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://dreambot.org/forums/index.php?app=core&module=global&section=login").openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("auth_key")) {
+                    String authKey = line.split("value=")[1].split(" ")[0].replaceAll("'", "");
+                    bufferedReader.close();
+                    return authKey;
+                }
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
